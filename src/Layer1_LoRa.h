@@ -1,6 +1,8 @@
 #ifndef SIM
 #ifndef RL_SX1276
+#ifndef ARDUINO_LORA
 #define ARDUINO_LORA
+#endif
 #endif
 #endif
 
@@ -42,7 +44,7 @@ public:
     packetBuffer *rxBuffer;
 
     // Main public functions
-    int init();
+    int init(bool resetRadio = true);
     int transmit();
     int receive();
 

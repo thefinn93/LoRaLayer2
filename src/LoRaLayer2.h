@@ -1,6 +1,8 @@
 #ifndef SIM
 #ifndef RL_SX1276
+#ifndef ARDUINO_LORA
 #define ARDUINO_LORA
+#endif
 #endif
 #endif
 
@@ -34,7 +36,7 @@
 #define MESSAGE_LENGTH 233
 #define SHA1_LENGTH 40
 #define ADDR_LENGTH 4
-#define MAX_ROUTES_PER_PACKET 40 
+#define MAX_ROUTES_PER_PACKET 40
 #define ASYNC_TX 1
 #define DEFAULT_TTL 30
 
@@ -107,6 +109,7 @@ public:
     // Main init and loop functions
     int init();
     int daemon();
+    int queueRoutingPacket();
 
 private:
     // Wrappers for packetBuffers

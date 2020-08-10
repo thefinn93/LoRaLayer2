@@ -18,6 +18,7 @@ class packetBuffer {
     // use pointer to char instead? and then copy that raw data into a packet
     BufferEntry read();
     int write(BufferEntry entry);
+    boolean empty();
     packetBuffer();
   private:
     BufferEntry buffer[BUFFERSIZE];

@@ -8,6 +8,10 @@ packetBuffer::packetBuffer() :
 {
 };
 
+boolean packetBuffer::empty() {
+  return head == tail;
+}
+
 // reads a packet from buffer
 BufferEntry packetBuffer::read(){
     BufferEntry entry;

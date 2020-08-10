@@ -37,7 +37,7 @@ int Layer1Class::debug_printf(const char* format, ...) {
 /* Public access to local variables
 */
 int Layer1Class::getTime(){
-    return millis();
+    return time(NULL)*1000;
 }
 
 int Layer1Class::loraInitialized(){
@@ -105,9 +105,9 @@ int Layer1Class::sendPacket(char* data, size_t len){
     int ret = 0;
 
     #ifdef LL2_DEBUG
-    Serial.printf("Layer1::sendPacket(): data = ");
+    Serial.printf("[%lu] Layer1::sendPacket(): data = ", time(NULL));
     for(int i = 0; i < len; i++){
-      Serial.printf("%c", data[i]);
+      Serial.printf("%x", data[i]);
     }
     Serial.printf("\r\n");
     #endif
@@ -136,18 +136,23 @@ void Layer1Class::setFlag(int packetSize) {
 /*Main public functions
 */
 // Initialization
-int Layer1Class::init(){
+int Layer1Class::init(bool resetRadio) {
     LoRa.setPins(_csPin, _resetPin, _DIOPin); // set CS, reset, DIO pin
     LoRa.setSPIFrequency(_spiFrequency);
     LoRa.setTxPower(_txPower);
 
-    if (!LoRa.begin(_loraFrequency)) { // defaults to 915MHz, can also be 433MHz or 868Mhz
+    Serial.printf("[%lu] LoRa.begin()", time(NULL));
+    Serial.println();
+
+    if (!LoRa.begin(_loraFrequency, resetRadio)) { // defaults to 915MHz, can also be 433MHz or 868Mhz
         return _loraInitialized;
     }
 
     LoRa.setSpreadingFactor(_spreadingFactor); // ranges from 6-12, default 9
     LoRa.onReceive(setFlag);
-    LoRa.receive();
+    if(resetRadio) {
+      LoRa.receive();
+    }
 
     _loraInitialized = 1;
     return _loraInitialized;
@@ -164,9 +169,9 @@ int Layer1Class::transmit(){
 
 // Receive polling function
 int Layer1Class::receive(){
-    int ret = 0; 
+    int ret = 0;
     if(_dioFlag) {
-        Serial.printf("Layer1Class::receive(): _packetSize = %d\r\n", _packetSize);
+        Serial.printf("[%lu] Layer1Class::receive(): _packetSize = %d\r\n", time(NULL), _packetSize);
         _enableInterrupt = false;
         _dioFlag = false;
         if (_packetSize > 0){
@@ -182,9 +187,9 @@ int Layer1Class::receive(){
             rxBuffer->write(entry);
 
             #ifdef LL2_DEBUG
-            Serial.printf("Layer1::receive(): data = ");
+            Serial.printf("[%lu] Layer1::receive(): data = ", time(NULL));
             for(int i = 0; i < len; i++){
-              Serial.printf("%c", data[i]);
+              Serial.printf("%X", data[i]);
             }
             Serial.printf("\r\n");
             #endif
