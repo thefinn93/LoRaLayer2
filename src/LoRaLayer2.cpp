@@ -35,6 +35,37 @@ int LL2Class::getRouteEntry(){
     return _routeEntry;
 }
 
+// exports up to the first count entires in the route table to save[]
+// returns the number of entries
+int LL2Class::saveRouteTable(RoutingTableEntry save[], int count) {
+  count = min(_routeEntry, count);
+  for(int i = 0; i < count; i++) {
+    memcpy(&save[i], &_routeTable[i], sizeof(_routeTable[i]));
+  }
+  return count;
+}
+
+int LL2Class::saveNeighborTable(NeighborTableEntry save[], int count) {
+  count = min(_neighborEntry, count);
+  for(int i = 0; i < count; i++) {
+    memcpy(&save[i], &_neighborTable[i], sizeof(_neighborTable[i]));
+  }
+  return count;
+}
+
+
+void LL2Class::loadRouteTable(RoutingTableEntry save[], int count) {
+  for(int i = 0; i < min(count, 255); i++) {
+    updateRouteTable(save[i], i);
+  }
+}
+
+void LL2Class::loadNeighborTable(NeighborTableEntry save[], int count) {
+  for(int i = 0; i < min(count, 255); i++) {
+    updateNeighborTable(save[i], i);
+  }
+}
+
 /* General purpose utility functions
 */
 uint8_t LL2Class::hexDigit(char ch){
@@ -402,6 +433,12 @@ int LL2Class::checkRoutingTable(RoutingTableEntry route){
 }
 
 int LL2Class::updateNeighborTable(NeighborTableEntry neighbor, int entry){
+#ifdef LL2_DEBUG
+    Serial.printf("[%lu] LoRaLayer2::updateNeighborTable(): ", time(NULL));
+    Serial.printf("address=%x%x%x%x ", neighbor.address[0], neighbor.address[1], neighbor.address[2], neighbor.address[3]);
+    Serial.printf("lastReceived=%i packet_success=%i metric=%i, entry=%i", neighbor.lastReceived, neighbor.packet_success, neighbor.metric, entry);
+    Serial.println();
+#endif
     // copy neighbor into specified entry in neighbor table
     memcpy(&_neighborTable[entry], &neighbor, sizeof(_neighborTable[entry]));
     if(entry == _neighborEntry){

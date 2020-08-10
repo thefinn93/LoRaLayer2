@@ -88,6 +88,12 @@ public:
     uint8_t* localAddress();
     int getRouteEntry();
 
+    int saveRouteTable(RoutingTableEntry [], int=255);
+    int saveNeighborTable(NeighborTableEntry [], int=255);
+
+    void loadRouteTable(RoutingTableEntry [], int);
+    void loadNeighborTable(NeighborTableEntry [], int);
+
     // User configurable settings
     void setLocalAddress(const char* macString);
     long setInterval(long interval);
