@@ -36,7 +36,7 @@ int LL2Class::getRouteEntry(){
 }
 
 // exports up to the first count entires in the route table to save[]
-// returns the number of entries
+// returns the number of entries exported
 int LL2Class::saveRouteTable(RoutingTableEntry save[], int count) {
   count = min(_routeEntry, count);
   for(int i = 0; i < count; i++) {
@@ -45,6 +45,8 @@ int LL2Class::saveRouteTable(RoutingTableEntry save[], int count) {
   return count;
 }
 
+// exports up to the first count entires in the neighbor table to save[]
+// returns the number of entries exported
 int LL2Class::saveNeighborTable(NeighborTableEntry save[], int count) {
   count = min(_neighborEntry, count);
   for(int i = 0; i < count; i++) {
@@ -53,17 +55,22 @@ int LL2Class::saveNeighborTable(NeighborTableEntry save[], int count) {
   return count;
 }
 
-
+// Loads count entries from save[] into the route tables
 void LL2Class::loadRouteTable(RoutingTableEntry save[], int count) {
   for(int i = 0; i < min(count, 255); i++) {
     updateRouteTable(save[i], i);
   }
 }
 
+// Loads count entries from save[] into the neighbor table
 void LL2Class::loadNeighborTable(NeighborTableEntry save[], int count) {
   for(int i = 0; i < min(count, 255); i++) {
     updateNeighborTable(save[i], i);
   }
+}
+
+void LL2Class::setMessageCount(uint8_t c) {
+  _messageCount = c;
 }
 
 /* General purpose utility functions

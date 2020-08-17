@@ -94,6 +94,8 @@ public:
     void loadRouteTable(RoutingTableEntry [], int);
     void loadNeighborTable(NeighborTableEntry [], int);
 
+    void setMessageCount(uint8_t);
+
     // User configurable settings
     void setLocalAddress(const char* macString);
     long setInterval(long interval);
