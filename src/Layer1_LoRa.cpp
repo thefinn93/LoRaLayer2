@@ -141,8 +141,10 @@ int Layer1Class::init(bool resetRadio) {
     LoRa.setSPIFrequency(_spiFrequency);
     LoRa.setTxPower(_txPower);
 
+    #ifdef LL2_DEBUG
     Serial.printf("[%lu] LoRa.begin()", time(NULL));
     Serial.println();
+    #endif
 
     if (!LoRa.begin(_loraFrequency, resetRadio)) { // defaults to 915MHz, can also be 433MHz or 868Mhz
         return _loraInitialized;
@@ -171,7 +173,9 @@ int Layer1Class::transmit(){
 int Layer1Class::receive(){
     int ret = 0;
     if(_dioFlag) {
+        #ifdef LL2_DEBUG
         Serial.printf("[%lu] Layer1Class::receive(): _packetSize = %d\r\n", time(NULL), _packetSize);
+        #endif
         _enableInterrupt = false;
         _dioFlag = false;
         if (_packetSize > 0){
